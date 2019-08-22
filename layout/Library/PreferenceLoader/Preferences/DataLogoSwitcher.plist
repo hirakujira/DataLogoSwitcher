@@ -1,0 +1,10 @@
+{
+	entry = {
+		bundle = DataLogoSwitcher;
+		cell = PSLinkCell;
+		detail = DLSSettingController;
+		icon = "Icon.png";
+		isController = 1;
+		label = "Data Logo Switcher";
+	};
+}

@@ -1,0 +1,8 @@
+{
+	Filter = {
+		Bundles = (
+			"com.apple.SpringBoard",
+			"com.apple.UIKit",
+		);
+	};
+}

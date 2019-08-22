@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>3G Logo</string>
+		</dict>
+		<dict>
+			<key>defaults</key>
+			<string>tw.hiraku.datalogoswitcher</string>
+			<key>PostNotification</key>
+			<string>tw.hiraku.datalogoswitcher/updated</string>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>default</key>
+			<integer>0</integer>
+			<key>key</key>
+			<string>3G</string>
+			<key>label</key>
+			<string>Mode</string>
+			<key>validTitles</key>
+			<array>
+				<string>Default</string>
+				<string>4G</string>
+				<string>LTE</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+			</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>4G/LTE Logo</string>
+		</dict>
+		<dict>
+			<key>defaults</key>
+			<string>tw.hiraku.datalogoswitcher</string>
+			<key>PostNotification</key>
+			<string>tw.hiraku.datalogoswitcher/updated</string>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>default</key>
+			<integer>0</integer>
+			<key>key</key>
+			<string>4G</string>
+			<key>label</key>
+			<string>Mode</string>
+			<key>validTitles</key>
+			<array>
+				<string>Default</string>
+				<string>4G</string>
+				<string>LTE</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+			</array>
+		</dict>
+		<dict>
+			<key>footerText</key>
+			<string>© 2011-2019 Hiraku (@hiraku_dev)</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>save:</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Save and Respring</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>Data Logo Switcher</string>
+</dict>
+</plist>
