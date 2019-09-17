@@ -1,6 +1,6 @@
 TWEAK_NAME = DataLogoSwitcher
 DataLogoSwitcher_OBJCC_FILES = Tweak.xm
-DataLogoSwitcher_CFLAGS = -F$(SYSROOT)/System/Library/CoreServices
+DataLogoSwitcher_CFLAGS = -F$(SYSROOT)/System/Library/CoreServices -fobjc-arc
 DataLogoSwitcher_FRAMEWORKS = Foundation UIKit
 DataLogoSwitcher_PRIVATE_FRAMEWORKS = Foundation
 GO_EASY_FOR_ME = 1

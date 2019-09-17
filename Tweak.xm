@@ -3,98 +3,204 @@
 
 #define SettingsPath @"/var/mobile/Library/Preferences/tw.hiraku.datalogoswitcher.plist"
 
-%group GiOS12
+//Before iOS 12.2
+typedef NS_ENUM(NSInteger, connectionType) {
+	ConnectionNone          = 0,
+	Connection1x            = 1,
+	ConnectionGprs          = 2,
+    ConnectionEdge          = 3,
+    ConnectionUmts          = 4,
+    ConnectionHsdpa         = 5,
+    Connection4GOverride    = 6,
+    ConnectionLte           = 7,
+    ConnectionBluetooth     = 8,
+    ConnectionWifi          = 9,
+    ConnectionOther         = 10
+};
+
+//After iOS 12.2
+typedef NS_ENUM(NSInteger, newConnectionType) {
+	NewConnectionNone       = 0,
+	NewConnection1x         = 1,
+	NewConnectionGprs       = 2,
+    NewConnectionEdge       = 3,
+    NewConnectionUmts       = 4,
+    NewConnectionHsdpa      = 5,
+    NewConnection4GOverride = 6,
+    NewConnectionLte        = 7,
+    NewConnectionLteA       = 8,
+    NewConnectionLtePlus    = 9,
+    NewConnection5GE        = 10,
+    NewConnectionBluetooth  = 11,
+    NewConnectionWifi       = 12,
+    NewConnectionOther      = 13
+};
+
+
+%group GiOS12_2
 %hook SBTelephonySubscriptionContext
 - (int)modemDataConnectionType
 {
-    int type = %orig;
+    int connectionType = %orig;
 
     NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:SettingsPath];
-    if ([defaults[@"3G"] intValue] == 0)
-        if (type == 4 || type == 5)
-            return 5;
-    if ([defaults[@"3G"] intValue] == 1)
-        if (type == 4 || type == 5)
-            return 6;
-    if ([defaults[@"3G"] intValue] == 2)
-        if (type == 4 || type == 5)
-            return 7;
-    if ([defaults[@"4G"] intValue] == 1 && type == 7)
-        return 6;
-    if ([defaults[@"4G"] intValue] == 2 && type == 6)
-        return 7;
-    if ([defaults[@"4G"] intValue] == 0 && type == 6)
-        return 6;
-    if ([defaults[@"4G"] intValue] == 0 && type == 7)
-        return 7;
+    if (connectionType == NewConnectionUmts || connectionType == NewConnectionHsdpa)
+    {
+        switch([defaults[@"3G"] intValue])
+        {
+            case 0:
+                return connectionType;
+            case 1:
+                return NewConnection4GOverride;
+            case 2:
+                return NewConnectionLte;
+            case 3:
+                return NewConnectionLteA;
+            case 4:
+                return NewConnectionLtePlus;
+            case 5:
+                return NewConnection5GE;
+            default:
+                break;
+        }
+    }
 
-    return type;
+    if (connectionType == NewConnection4GOverride || 
+        connectionType == NewConnectionLte || 
+        connectionType == NewConnectionLteA || 
+        connectionType == NewConnectionLtePlus || 
+        connectionType == NewConnection5GE)
+    {
+        switch([defaults[@"4G"] intValue])
+        {
+            case 0:
+                return connectionType;
+            case 1:
+                return NewConnection4GOverride;
+            case 2:
+                return NewConnectionLte;
+            case 3:
+                return NewConnectionLteA;
+            case 4:
+                return NewConnectionLtePlus;
+            case 5:
+                return NewConnection5GE;
+            default:
+                break;
+        }
+    }
+
+    return connectionType;
 }
 %end
+%end
 
+
+%group GiOS12_1
+%hook SBTelephonySubscriptionContext
+- (int)modemDataConnectionType
+{
+    int connectionType = %orig;
+
+    NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:SettingsPath];
+    if (connectionType == ConnectionUmts || connectionType == ConnectionHsdpa)
+    {
+        switch([defaults[@"3G"] intValue])
+        {
+            case 0:
+                return connectionType;
+            case 1:
+                return Connection4GOverride;
+            case 2:
+                return ConnectionLte;
+            default:
+                break;
+        }
+    }
+
+    if (connectionType == Connection4GOverride || connectionType == ConnectionLte)
+    {
+        switch([defaults[@"4G"] intValue])
+        {
+            case 0:
+                return connectionType;
+            case 1:
+                return Connection4GOverride;
+            case 2:
+                return ConnectionLte;
+            default:
+                break;
+        }
+    }
+
+    return connectionType;
+}
+%end
+%end
+
+%group GiOS12
 %hook SBMutableTelephonyCarrierBundleInfo
 - (BOOL)LTEConnectionShows4G
 {
-    NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:SettingsPath];
-
-    if ([defaults[@"3G"] intValue] == 2)
-        return NO;
-    if ([defaults[@"4G"] intValue] == 2)
-        return NO;
-
-    return %orig;
+    return NO;
 }
 %end
 %end
 
 %hook SBTelephonyManager
-- (int)dataConnectionType {
-    int type = %orig;
-
+- (int)dataConnectionType 
+{
+    int connectionType = %orig;
     NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:SettingsPath];
-    if ([defaults[@"3G"] intValue] == 0)
-        if (type == 4 || type == 5)
-            return 5;
-    if ([defaults[@"3G"] intValue] == 1)
-        if (type == 4 || type == 5)
-            return 6;
-    if ([defaults[@"3G"] intValue] == 2)
-        if (type == 4 || type == 5)
-            return 7;
-    if ([defaults[@"4G"] intValue] == 1 && type == 7)
-        return 6;
-    if ([defaults[@"4G"] intValue] == 2 && type == 6)
-        return 7;
-    if ([defaults[@"4G"] intValue] == 0 && type == 6)
-        return 6;
-    if ([defaults[@"4G"] intValue] == 0 && type == 7)
-        return 7;
+    
+    if (connectionType == ConnectionUmts || connectionType == ConnectionHsdpa)
+    {
+        switch([defaults[@"3G"] intValue])
+        {
+            case 0:
+                return connectionType;
+            case 1:
+                return Connection4GOverride;
+            case 2:
+                return ConnectionLte;
+            default:
+                break;
+        }
+    }
 
-    return type;
-    /*
-    0 = null
-    1 = 1x
-    2 = GPRS
-    3 = EDGE
-    4 = 3G
-    5 = 3G (3.5G)
-    6 = 4G
-    7 = LTE
-    8 = HotSpot
-    9 = Wifi
-    10 = Wifi(2)
-    11 = Syncing
-    */
+    if (connectionType == Connection4GOverride || connectionType == ConnectionLte)
+    {
+        switch([defaults[@"4G"] intValue])
+        {
+            case 0:
+                return connectionType;
+            case 1:
+                return Connection4GOverride;
+            case 2:
+                return ConnectionLte;
+            default:
+                break;
+        }
+    }
+
+    return connectionType;
 }
 %end
 
-%ctor {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+%ctor 
+{
     %init;
-
-    if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0) 
+    if (kCFCoreFoundationVersionNumber_iOS_12_0 >= kCFCoreFoundationVersionNumber_iOS_12_0)
     {
         %init(GiOS12);
+
+        if (kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_12_2) 
+        {
+            %init(GiOS12_1);
+        }
+        else
+        {
+            %init(GiOS12_2);
+        }
     }
-    [pool release];
 }
