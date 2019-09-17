@@ -5,9 +5,9 @@
 
 //Before iOS 12.2
 typedef NS_ENUM(NSInteger, connectionType) {
-	ConnectionNone          = 0,
-	Connection1x            = 1,
-	ConnectionGprs          = 2,
+    ConnectionNone          = 0,
+    Connection1x            = 1,
+    ConnectionGprs          = 2,
     ConnectionEdge          = 3,
     ConnectionUmts          = 4,
     ConnectionHsdpa         = 5,
@@ -20,9 +20,9 @@ typedef NS_ENUM(NSInteger, connectionType) {
 
 //After iOS 12.2
 typedef NS_ENUM(NSInteger, newConnectionType) {
-	NewConnectionNone       = 0,
-	NewConnection1x         = 1,
-	NewConnectionGprs       = 2,
+    NewConnectionNone       = 0,
+    NewConnection1x         = 1,
+    NewConnectionGprs       = 2,
     NewConnectionEdge       = 3,
     NewConnectionUmts       = 4,
     NewConnectionHsdpa      = 5,
