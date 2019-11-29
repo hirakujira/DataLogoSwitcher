@@ -36,6 +36,70 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
     NewConnectionOther      = 13
 };
 
+%group GiOS13
+%hook STTelephonySubscriptionContext
+- (int)modemDataConnectionType
+{
+    int connectionType = %orig;
+
+    NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:SettingsPath];
+    if (connectionType == NewConnectionUmts || connectionType == NewConnectionHsdpa)
+    {
+        switch([defaults[@"3G"] intValue])
+        {
+            case 0:
+                return connectionType;
+            case 1:
+                return NewConnection4GOverride;
+            case 2:
+                return NewConnectionLte;
+            case 3:
+                return NewConnectionLteA;
+            case 4:
+                return NewConnectionLtePlus;
+            case 5:
+                return NewConnection5GE;
+            default:
+                break;
+        }
+    }
+
+    if (connectionType == NewConnection4GOverride || 
+        connectionType == NewConnectionLte || 
+        connectionType == NewConnectionLteA || 
+        connectionType == NewConnectionLtePlus || 
+        connectionType == NewConnection5GE)
+    {
+        switch([defaults[@"4G"] intValue])
+        {
+            case 0:
+                return connectionType;
+            case 1:
+                return NewConnection4GOverride;
+            case 2:
+                return NewConnectionLte;
+            case 3:
+                return NewConnectionLteA;
+            case 4:
+                return NewConnectionLtePlus;
+            case 5:
+                return NewConnection5GE;
+            default:
+                break;
+        }
+    }
+
+    return connectionType;
+}
+%end
+
+%hook STTelephonyCarrierBundleInfo
+- (BOOL)LTEConnectionShows4G {
+    return NO;
+}
+%end
+%end
+
 
 %group GiOS12_2
 %hook SBTelephonySubscriptionContext
@@ -147,6 +211,7 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
 %end
 %end
 
+%group GiOS11
 %hook SBTelephonyManager
 - (int)dataConnectionType 
 {
@@ -186,11 +251,17 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
     return connectionType;
 }
 %end
+%end
 
 %ctor 
 {
     %init;
-    if (kCFCoreFoundationVersionNumber_iOS_12_0 >= kCFCoreFoundationVersionNumber_iOS_12_0)
+
+    if (kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_12_0) 
+    {
+         %init(GiOS11);
+    }
+    else if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_0)
     {
         %init(GiOS12);
 
@@ -198,9 +269,13 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
         {
             %init(GiOS12_1);
         }
-        else
+        else if (kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_0)
         {
             %init(GiOS12_2);
         }
+    }
+    else 
+    {
+        %init(GiOS13);
     }
 }
