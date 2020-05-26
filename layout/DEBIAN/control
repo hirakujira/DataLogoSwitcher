@@ -4,7 +4,7 @@ Name: Data Logo Switcher
 Package: tw.hiraku.datalogoswitcher
 Section: Tweaks
 Depends: firmware (>= 7.0), preferenceloader
-Version: 2.1
+Version: 3.0
 Architecture: iphoneos-arm
 Description: Change your 3G/4G/LTE logo
 Depiction: http://moreinfo.thebigboss.org/moreinfo/depiction.php?file=datalogoswitcherDp

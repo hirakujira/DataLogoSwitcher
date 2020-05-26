@@ -98,6 +98,28 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
     return NO;
 }
 %end
+
+%hook _UIStatusBarCellularItem
+- (NSString *)_stringForCellularType:(int)connectionType {
+    NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:SettingsPath];
+    
+    if ((connectionType == NewConnectionUmts || connectionType == NewConnectionHsdpa) &&
+        [defaults[@"3G"] intValue] == 6) {
+        return defaults[@"custom3GString"] ? defaults[@"custom3GString"] : @"3G";
+    }
+
+    if ((connectionType == NewConnection4GOverride || 
+        connectionType == NewConnectionLte || 
+        connectionType == NewConnectionLteA || 
+        connectionType == NewConnectionLtePlus || 
+        connectionType == NewConnection5GE) &&
+        [defaults[@"4G"] intValue] == 6) {
+        return defaults[@"custom4GString"] ? defaults[@"custom4GString"] : @"4G";
+    }
+
+    return %orig;
+}
+%end
 %end
 
 
@@ -157,6 +179,28 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
     return connectionType;
 }
 %end
+
+%hook _UIStatusBarCellularItem
+- (NSString *)_stringForCellularType:(int)connectionType {
+    NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:SettingsPath];
+    
+    if ((connectionType == NewConnectionUmts || connectionType == NewConnectionHsdpa) &&
+        [defaults[@"3G"] intValue] == 6) {
+        return defaults[@"custom3GString"] ? defaults[@"custom3GString"] : @"3G";
+    }
+
+    if ((connectionType == NewConnection4GOverride || 
+        connectionType == NewConnectionLte || 
+        connectionType == NewConnectionLteA || 
+        connectionType == NewConnectionLtePlus || 
+        connectionType == NewConnection5GE) &&
+        [defaults[@"4G"] intValue] == 6) {
+        return defaults[@"custom4GString"] ? defaults[@"custom4GString"] : @"4G";
+    }
+
+    return %orig;
+}
+%end
 %end
 
 
@@ -198,6 +242,26 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
     }
 
     return connectionType;
+}
+%end
+
+%hook _UIStatusBarCellularItem
+- (NSString *)_stringForCellularType:(int)connectionType {
+    NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:SettingsPath];
+    
+    if ((connectionType == NewConnectionUmts || 
+        connectionType == NewConnectionHsdpa) &&
+        [defaults[@"3G"] intValue] == 6) {
+        return defaults[@"custom3GString"] ? defaults[@"custom3GString"] : @"3G";
+    }
+
+    if ((connectionType == Connection4GOverride || 
+        connectionType == ConnectionLte) &&
+        [defaults[@"4G"] intValue] == 6) {
+        return defaults[@"custom4GString"] ? defaults[@"custom4GString"] : @"4G";
+    }
+
+    return %orig;
 }
 %end
 %end
