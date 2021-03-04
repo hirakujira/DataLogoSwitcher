@@ -31,10 +31,35 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
     NewConnectionLteA       = 8,
     NewConnectionLtePlus    = 9,
     NewConnection5GE        = 10,
-    NewConnectionBluetooth  = 11,
-    NewConnectionWifi       = 12,
-    NewConnectionOther      = 13
+    NewConnection5G         = 11,
+    NewConnection5GPlus     = 12,
+    NewConnection5GUWB      = 13,
+    NewConnectionBluetooth  = 14,
+    // NewConnectionBluetooth  = 11,
+    // NewConnectionWifi       = 12,
+    // NewConnectionOther      = 13
 };
+
+// //After iOS 14
+// typedef NS_ENUM(NSInteger, newConnectionType) {
+//     NewConnectionNone       = 0,
+//     NewConnection1x         = 1,
+//     NewConnectionGprs       = 2,
+//     NewConnectionEdge       = 3,
+//     NewConnectionUmts       = 4,
+//     NewConnectionHsdpa      = 5,
+//     NewConnection4GOverride = 6,
+//     NewConnectionLte        = 7,
+//     NewConnectionLteA       = 8,
+//     NewConnectionLtePlus    = 9,
+//     NewConnection5GE        = 10,
+//     NewConnection5G         = 11,
+//     NewConnection5GPlus     = 12,
+//     NewConnection5GUWB      = 13,
+//     NewConnectionBluetooth  = 14,
+//     NewConnectionWifi       = 15,
+//     NewConnectionOther      = 16
+// };
 
 %group GiOS13
 %hook STTelephonySubscriptionContext
@@ -43,7 +68,8 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
     int connectionType = %orig;
 
     NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:SettingsPath];
-    if (connectionType == NewConnectionUmts || connectionType == NewConnectionHsdpa)
+    if (connectionType == NewConnectionUmts || 
+        connectionType == NewConnectionHsdpa)
     {
         switch([defaults[@"3G"] intValue])
         {
@@ -59,6 +85,12 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
                 return NewConnectionLtePlus;
             case 5:
                 return NewConnection5GE;
+            case 6:
+                return NewConnection5G;
+            case 7:
+                return NewConnection5GPlus;
+            case 8:
+                return NewConnection5GUWB;
             default:
                 break;
         }
@@ -84,6 +116,31 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
                 return NewConnectionLtePlus;
             case 5:
                 return NewConnection5GE;
+            case 6:
+                return NewConnection5G;
+            case 7:
+                return NewConnection5GPlus;
+            case 8:
+                return NewConnection5GUWB;
+            default:
+                break;
+        }
+    }
+
+    if (connectionType == NewConnection5G || 
+        connectionType == NewConnection5GPlus || 
+        connectionType == NewConnection5GUWB)
+    {
+        switch([defaults[@"5G"] intValue])
+        {
+            case 0:
+                return connectionType;
+            case 1:
+                return NewConnection5G;
+            case 2:
+                return NewConnection5GPlus;
+            case 3:
+                return NewConnection5GUWB;
             default:
                 break;
         }
@@ -104,7 +161,7 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
     NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:SettingsPath];
     
     if ((connectionType == NewConnectionUmts || connectionType == NewConnectionHsdpa) &&
-        [defaults[@"3G"] intValue] == 6) {
+        [defaults[@"3G"] intValue] == 9) {
         return defaults[@"custom3GString"] ? defaults[@"custom3GString"] : @"3G";
     }
 
@@ -113,8 +170,15 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
         connectionType == NewConnectionLteA || 
         connectionType == NewConnectionLtePlus || 
         connectionType == NewConnection5GE) &&
-        [defaults[@"4G"] intValue] == 6) {
+        [defaults[@"4G"] intValue] == 9) {
         return defaults[@"custom4GString"] ? defaults[@"custom4GString"] : @"4G";
+    }
+
+    if ((connectionType == NewConnection5G || 
+        connectionType == NewConnection5GPlus || 
+        connectionType == NewConnection5GUWB) &&
+        [defaults[@"5G"] intValue] == 4) {
+        return defaults[@"custom5GString"] ? defaults[@"custom5GString"] : @"5G";
     }
 
     return %orig;

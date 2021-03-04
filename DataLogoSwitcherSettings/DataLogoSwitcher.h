@@ -1,12 +1,14 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import <Preferences/Preferences.h>
+#import <Preferences/PSSpecifier.h>
+#import <Preferences/PSListController.h>
 #import <objc/runtime.h>
 
 #define UserDefaultsChangedNotification "tw.hiraku.datalogoswitcher"
 #define SettingsPath @"/var/mobile/Library/Preferences/tw.hiraku.datalogoswitcher.plist"
 
 @interface PSSpecifier (DataLogoSwitcher)
+@property (nonatomic, retain) NSArray *values;
 - (void)setIdentifier:(NSString *)identifier;
 @end
 

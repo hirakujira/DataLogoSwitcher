@@ -1,8 +1,5 @@
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-#import <Preferences/Preferences.h>
-#import <firmware.h>
 #import "DataLogoSwitcher.h"
+#import <firmware.h>
 
 //============================================================================================================
 
@@ -21,7 +18,22 @@
 		PSSpecifier *logo3G = [PSSpecifier preferenceSpecifierNamed:@"3G Logo" target:self set:@selector(setValue:forSpecifier:) get:@selector(getValueForSpecifier:) detail:NSClassFromString(@"PSListItemsController") cell:[PSTableCell cellTypeFromString:@"PSLinkListCell"] edit:nil];
 		[logo3G setIdentifier:@"3G"];
 
-        if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2) {
+        if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0) {
+            logo3G.values = @[@0,@1,@2,@3,@4,@5,@6,@7,@8,@9];
+            logo3G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
+                @"Default",
+                @"4G",
+                @"LTE",
+                @"LTE-A",
+                @"LTE Plus",
+                @"5GE",
+                @"5G",
+                @"5G Plus",
+                @"5G UWB",
+                @"Custom"
+            ] forKeys:logo3G.values];
+        }
+        else if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2) {
             logo3G.values = @[@0,@1,@2,@3,@4,@5,@6];
             logo3G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
                 @"Default",
@@ -48,7 +60,22 @@
         PSSpecifier *logo4G = [PSSpecifier preferenceSpecifierNamed:@"4G/LTE Logo" target:self set:@selector(setValue:forSpecifier:) get:@selector(getValueForSpecifier:) detail:NSClassFromString(@"PSListItemsController") cell:[PSTableCell cellTypeFromString:@"PSLinkListCell"] edit:nil];
 		[logo4G setIdentifier:@"4G"];
 
-        if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2) {
+        if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0) {
+            logo4G.values = @[@0,@1,@2,@3,@4,@5,@6,@7,@8,@9];
+            logo4G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
+                @"Default",
+                @"4G",
+                @"LTE",
+                @"LTE-A",
+                @"LTE Plus",
+                @"5GE",
+                @"5G",
+                @"5G Plus",
+                @"5G UWB",
+                @"Custom"
+            ] forKeys:logo4G.values];
+        }
+        else if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2) {
             logo4G.values = @[@0,@1,@2,@3,@4,@5,@6];
             logo4G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
                 @"Default",
@@ -71,6 +98,23 @@
 		[logo4G setProperty:@"kListValue" forKey:@"key"];
 		[specifiers addObject:logo4G];
 
+        if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0) {
+            [specifiers addObject:[PSSpecifier emptyGroupSpecifier]];
+            PSSpecifier *logo5G = [PSSpecifier preferenceSpecifierNamed:@"5G Logo" target:self set:@selector(setValue:forSpecifier:) get:@selector(getValueForSpecifier:) detail:NSClassFromString(@"PSListItemsController") cell:[PSTableCell cellTypeFromString:@"PSLinkListCell"] edit:nil];
+            [logo5G setIdentifier:@"5G"];
+
+            logo5G.values = @[@0,@1,@2,@3,@4];
+            logo5G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
+                @"Default",
+                @"5G",
+                @"5G Plus",
+                @"5G UWB",
+                @"Custom"
+            ] forKeys:logo5G.values];
+            [logo5G setProperty:@"kListValue" forKey:@"key"];
+            [specifiers addObject:logo5G];
+        }
+
         if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0) {
             PSSpecifier *customStringGroup = [PSSpecifier groupSpecifierWithName:@"Custom String"];
             [customStringGroup setProperty:@"To use custom strings, please choose \"Custom\" from the logo options first." forKey:@"footerText"];
@@ -85,15 +129,21 @@
             [specifiers addObject:custom4GStringCell];
         }
 
+        if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0) {
+            PSSpecifier *custom5GStringCell = [PSSpecifier preferenceSpecifierNamed:@"5G" target:self set:@selector(setValue:forSpecifier:) get:@selector(getValueForSpecifier:) detail:nil cell:[PSTableCell cellTypeFromString:@"PSEditTextCell"] edit:nil];
+            [custom5GStringCell setIdentifier:@"custom5GString"];
+            [specifiers addObject:custom5GStringCell];
+        }
+
         PSSpecifier* footSpecifier = [PSSpecifier emptyGroupSpecifier];
-        [footSpecifier setProperty:@"© 2011-2020 Hiraku (@hiraku_dev)" forKey:@"footerText"];
+        [footSpecifier setProperty:@"© 2011-2021 Hiraku (@hiraku_dev)" forKey:@"footerText"];
         [specifiers addObject:footSpecifier];
 
         PSSpecifier *respringButton = [PSSpecifier preferenceSpecifierNamed:@"Save and Respring" target:self set:nil get:nil detail:nil cell:[PSTableCell cellTypeFromString:@"PSButtonCell"] edit:nil];
         respringButton->action = @selector(respring);
         [specifiers addObject:respringButton];
 
-        _specifiers = [[NSArray alloc]initWithArray:specifiers];
+        _specifiers = [[NSMutableArray alloc] initWithArray:specifiers];
     }
     return _specifiers;
 }
@@ -105,6 +155,7 @@
     if(![[NSFileManager defaultManager] fileExistsAtPath:SettingsPath]) {
         settings = [[NSMutableDictionary alloc] initWithObjectsAndKeys: @0, @"3G", 
                                                                         @0, @"4G",
+                                                                        @0, @"5G",
                                                                         nil];
         [settings writeToFile:SettingsPath atomically:YES];
     }
