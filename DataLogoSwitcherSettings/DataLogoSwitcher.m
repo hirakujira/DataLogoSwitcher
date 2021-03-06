@@ -19,7 +19,7 @@
 		[logo3G setIdentifier:@"3G"];
 
         if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0) {
-            logo3G.values = @[@0,@1,@2,@3,@4,@5,@6,@7,@8,@9];
+            logo3G.values = @[@0,@1,@2,@3,@4,@5,@6,@7,@8,@99];
             logo3G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
                 @"Default",
                 @"4G",
@@ -34,7 +34,7 @@
             ] forKeys:logo3G.values];
         }
         else if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2) {
-            logo3G.values = @[@0,@1,@2,@3,@4,@5,@6];
+            logo3G.values = @[@0,@1,@2,@3,@4,@5,@99];
             logo3G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
                 @"Default",
                 @"4G",
@@ -61,7 +61,7 @@
 		[logo4G setIdentifier:@"4G"];
 
         if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0) {
-            logo4G.values = @[@0,@1,@2,@3,@4,@5,@6,@7,@8,@9];
+            logo4G.values = @[@0,@1,@2,@3,@4,@5,@6,@7,@8,@99];
             logo4G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
                 @"Default",
                 @"4G",
@@ -76,7 +76,7 @@
             ] forKeys:logo4G.values];
         }
         else if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2) {
-            logo4G.values = @[@0,@1,@2,@3,@4,@5,@6];
+            logo4G.values = @[@0,@1,@2,@3,@4,@5,@99];
             logo4G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
                 @"Default",
                 @"4G",
@@ -103,7 +103,7 @@
             PSSpecifier *logo5G = [PSSpecifier preferenceSpecifierNamed:@"5G Logo" target:self set:@selector(setValue:forSpecifier:) get:@selector(getValueForSpecifier:) detail:NSClassFromString(@"PSListItemsController") cell:[PSTableCell cellTypeFromString:@"PSLinkListCell"] edit:nil];
             [logo5G setIdentifier:@"5G"];
 
-            logo5G.values = @[@0,@1,@2,@3,@4];
+            logo5G.values = @[@0,@1,@2,@3,@99];
             logo5G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
                 @"Default",
                 @"5G",
