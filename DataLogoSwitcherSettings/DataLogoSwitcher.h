@@ -4,6 +4,7 @@
 #import <Preferences/PSTableCell.h>
 #import <Preferences/PSListController.h>
 #import <objc/runtime.h>
+#import <spawn.h>
 
 #define UserDefaultsChangedNotification "tw.hiraku.datalogoswitcher"
 #define SettingsPath @"/var/mobile/Library/Preferences/tw.hiraku.datalogoswitcher.plist"

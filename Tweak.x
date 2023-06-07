@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import <firmware.h>
+#import <version.h>
 
 #define SettingsPath @"/var/mobile/Library/Preferences/tw.hiraku.datalogoswitcher.plist"
 
@@ -34,7 +34,8 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
     NewConnection5G         = 11,
     NewConnection5GPlus     = 12,
     NewConnection5GUWB      = 13,
-    NewConnectionBluetooth  = 14,
+    NewConnection5GUC       = 14,
+    NewConnectionBluetooth  = 15,
     // NewConnectionBluetooth  = 11,
     // NewConnectionWifi       = 12,
     // NewConnectionOther      = 13
@@ -91,6 +92,8 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
                 return NewConnection5GPlus;
             case 8:
                 return NewConnection5GUWB;
+            case 9:
+                return NewConnection5GUC;
             default:
                 break;
         }
@@ -122,6 +125,8 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
                 return NewConnection5GPlus;
             case 8:
                 return NewConnection5GUWB;
+            case 9:
+                return NewConnection5GUC;
             default:
                 break;
         }
@@ -129,7 +134,8 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
 
     if (connectionType == NewConnection5G || 
         connectionType == NewConnection5GPlus || 
-        connectionType == NewConnection5GUWB)
+        connectionType == NewConnection5GUWB || 
+        (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_15_0 && connectionType == NewConnection5GUC))
     {
         switch([defaults[@"5G"] intValue])
         {
@@ -141,6 +147,8 @@ typedef NS_ENUM(NSInteger, newConnectionType) {
                 return NewConnection5GPlus;
             case 3:
                 return NewConnection5GUWB;
+            case 4:
+                return NewConnection5GUC;
             default:
                 break;
         }

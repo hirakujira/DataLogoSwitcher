@@ -1,5 +1,13 @@
 #import "DataLogoSwitcher.h"
-#import <firmware.h>
+#import <version.h>
+
+static void easy_spawn(const char* args[]) 
+{
+    pid_t pid;
+    int status;
+    posix_spawn(&pid, args[0], NULL, NULL, (char* const*)args, NULL);
+    waitpid(pid, &status, WEXITED);
+}
 
 //============================================================================================================
 
@@ -18,7 +26,23 @@
 		PSSpecifier *logo3G = [PSSpecifier preferenceSpecifierNamed:@"3G Logo" target:self set:@selector(setValue:forSpecifier:) get:@selector(getValueForSpecifier:) detail:NSClassFromString(@"PSListItemsController") cell:[PSTableCell cellTypeFromString:@"PSLinkListCell"] edit:nil];
 		[logo3G setIdentifier:@"3G"];
 
-        if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0) {
+        if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_15_0) {
+            logo3G.values = @[@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@99];
+            logo3G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
+                @"Default",
+                @"4G",
+                @"LTE",
+                @"LTE-A",
+                @"LTE Plus",
+                @"5GE",
+                @"5G",
+                @"5G Plus",
+                @"5G UWB",
+                @"5G UC",
+                @"Custom"
+            ] forKeys:logo3G.values];
+        }
+        else if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0) {
             logo3G.values = @[@0,@1,@2,@3,@4,@5,@6,@7,@8,@99];
             logo3G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
                 @"Default",
@@ -60,7 +84,23 @@
         PSSpecifier *logo4G = [PSSpecifier preferenceSpecifierNamed:@"4G/LTE Logo" target:self set:@selector(setValue:forSpecifier:) get:@selector(getValueForSpecifier:) detail:NSClassFromString(@"PSListItemsController") cell:[PSTableCell cellTypeFromString:@"PSLinkListCell"] edit:nil];
 		[logo4G setIdentifier:@"4G"];
 
-        if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0) {
+        if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_15_0) {
+            logo4G.values = @[@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@99];
+            logo4G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
+                @"Default",
+                @"4G",
+                @"LTE",
+                @"LTE-A",
+                @"LTE Plus",
+                @"5GE",
+                @"5G",
+                @"5G Plus",
+                @"5G UWB",
+                @"5G UC",
+                @"Custom"
+            ] forKeys:logo4G.values];
+        }
+        else if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0) {
             logo4G.values = @[@0,@1,@2,@3,@4,@5,@6,@7,@8,@99];
             logo4G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
                 @"Default",
@@ -98,7 +138,24 @@
 		[logo4G setProperty:@"kListValue" forKey:@"key"];
 		[specifiers addObject:logo4G];
 
-        if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0) {
+        if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_15_0) {
+            [specifiers addObject:[PSSpecifier emptyGroupSpecifier]];
+            PSSpecifier *logo5G = [PSSpecifier preferenceSpecifierNamed:@"5G Logo" target:self set:@selector(setValue:forSpecifier:) get:@selector(getValueForSpecifier:) detail:NSClassFromString(@"PSListItemsController") cell:[PSTableCell cellTypeFromString:@"PSLinkListCell"] edit:nil];
+            [logo5G setIdentifier:@"5G"];
+
+            logo5G.values = @[@0,@1,@2,@3,@4,@99];
+            logo5G.titleDictionary = [NSDictionary dictionaryWithObjects:@[
+                @"Default",
+                @"5G",
+                @"5G Plus",
+                @"5G UWB",
+                @"5G UC",
+                @"Custom"
+            ] forKeys:logo5G.values];
+            [logo5G setProperty:@"kListValue" forKey:@"key"];
+            [specifiers addObject:logo5G];
+        }
+        else if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0) {
             [specifiers addObject:[PSSpecifier emptyGroupSpecifier]];
             PSSpecifier *logo5G = [PSSpecifier preferenceSpecifierNamed:@"5G Logo" target:self set:@selector(setValue:forSpecifier:) get:@selector(getValueForSpecifier:) detail:NSClassFromString(@"PSListItemsController") cell:[PSTableCell cellTypeFromString:@"PSLinkListCell"] edit:nil];
             [logo5G setIdentifier:@"5G"];
@@ -136,7 +193,7 @@
         }
 
         PSSpecifier* footSpecifier = [PSSpecifier emptyGroupSpecifier];
-        [footSpecifier setProperty:@"© 2011-2021 Hiraku (@hiraku_dev)" forKey:@"footerText"];
+        [footSpecifier setProperty:@"© 2011-2023 Hiraku (@hiraku_dev)" forKey:@"footerText"];
         [specifiers addObject:footSpecifier];
 
         PSSpecifier *respringButton = [PSSpecifier preferenceSpecifierNamed:@"Save and Respring" target:self set:nil get:nil detail:nil cell:[PSTableCell cellTypeFromString:@"PSButtonCell"] edit:nil];
@@ -172,6 +229,11 @@
 
 -(void)respring {
     sleep(1);
+    if ([[NSFileManager defaultManager] fileExistsAtPath:@"/var/jb/usr/bin/killall"]) {
+        easy_spawn((const char *[]){"/var/jb/usr/bin/killall", "lsd", "SpringBoard", NULL});
+        easy_spawn((const char *[]){"/var/jb/usr/bin/killall", "backboardd", NULL});
+        return;
+    }
     system("killall lsd SpringBoard");
 }
 //=============================================================================
