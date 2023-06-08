@@ -7,8 +7,15 @@ DataLogoSwitcher_PRIVATE_FRAMEWORKS = Preferences
 
 SDKVERSION = 9.2
 SYSROOT = $(THEOS)/sdks/iPhoneOS9.2.sdk
-ARCHS = armv7 armv7s arm64 arm64e
-TARGET = iphone:clang::5.0
+
+ifeq ($(THEOS_PACKAGE_SCHEME),rootless)
+	ARCHS = arm64 arm64e
+	TARGET = iphone:16.2:12.0
+else
+	ARCHS = arm64 arm64e
+	TARGET = iphone:12.1.2:11.0
+endif
+
 
 GO_EASY_ON_ME = 1
 

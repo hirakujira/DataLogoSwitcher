@@ -229,12 +229,13 @@ static void easy_spawn(const char* args[])
 
 -(void)respring {
     sleep(1);
-    if ([[NSFileManager defaultManager] fileExistsAtPath:@"/var/jb/usr/bin/killall"]) {
-        easy_spawn((const char *[]){"/var/jb/usr/bin/killall", "lsd", "SpringBoard", NULL});
-        easy_spawn((const char *[]){"/var/jb/usr/bin/killall", "backboardd", NULL});
+    if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_8_0 && [[NSFileManager defaultManager] fileExistsAtPath:ROOT_PATH_NS(@"/usr/bin/killall")]) {
+        easy_spawn((const char *[]){ROOT_PATH("/usr/bin/killall"), "lsd", "SpringBoard", NULL});
+        easy_spawn((const char *[]){ROOT_PATH("/usr/bin/killall"), "backboardd", NULL});
         return;
     }
     system("killall lsd SpringBoard");
+    system("killall backboardd");
 }
 //=============================================================================
 @end

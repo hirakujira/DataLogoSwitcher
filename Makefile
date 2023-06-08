@@ -4,13 +4,18 @@ DataLogoSwitcher_CFLAGS = -F$(SYSROOT)/System/Library/CoreServices -fobjc-arc
 DataLogoSwitcher_FRAMEWORKS = Foundation UIKit
 DataLogoSwitcher_PRIVATE_FRAMEWORKS = Foundation
 GO_EASY_FOR_ME = 1
-LDFLAGS += -Wl,-segalign,0x4000
 FINALPACKAGE = 1
 
 SDKVERSION = 9.2
 SYSROOT = $(THEOS)/sdks/iPhoneOS9.2.sdk
-ARCHS = armv7 arm64 arm64e
-TARGET = iphone:clang::5.0
+
+ifeq ($(THEOS_PACKAGE_SCHEME),rootless)
+	ARCHS = arm64 arm64e
+	TARGET = iphone:16.2:12.0
+else
+	ARCHS = armv7 arm64 arm64e
+	TARGET = iphone:12.1.2:7.0
+endif
 
 SUBPROJECTS += DataLogoSwitcherSettings
 

@@ -1,7 +1,8 @@
 #import <Foundation/Foundation.h>
 #import <version.h>
+#import <rootless.h>
 
-#define SettingsPath @"/var/mobile/Library/Preferences/tw.hiraku.datalogoswitcher.plist"
+#define SettingsPath ROOT_PATH_NS(@"/var/mobile/Library/Preferences/tw.hiraku.datalogoswitcher.plist")
 
 //Before iOS 12.2
 typedef NS_ENUM(NSInteger, connectionType) {
